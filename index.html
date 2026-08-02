@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V.I.P. ОХРАНА: ГЛАВА ПЕРВАЯ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Oswald:wght@400;600&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Oswald', 'Segoe UI', Arial, sans-serif;
+    background: #0a0a0a;
+    color: #f0e6d2;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 24px 12px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  /* film grain / scratches overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+    animation: flicker 0.15s infinite;
+  }
+  @keyframes flicker {
+    0% { opacity: 0.35; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.4; }
+  }
+  .wrap { width: 100%; max-width: 660px; position: relative; z-index: 1; }
+
+  .titlecard {
+    text-align: center;
+    margin-bottom: 22px;
+    padding: 16px 8px 20px;
+    border-top: 4px solid #d4a017;
+    border-bottom: 4px solid #d4a017;
+  }
+  h1 {
+    font-family: 'Bebas Neue', 'Oswald', sans-serif;
+    font-size: 2.6rem;
+    letter-spacing: 4px;
+    margin: 10px 0 0;
+    color: #e30613;
+    text-shadow: 3px 3px 0 #000, -1px -1px 0 #d4a017;
+    text-transform: uppercase;
+  }
+  .sub {
+    font-family: 'Special Elite', monospace;
+    text-align: center;
+    color: #d4a017;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .presents {
+    font-family: 'Special Elite', monospace;
+    color: #999;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: #1a1a1a;
+    border: 1px solid #d4a017;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: repeating-linear-gradient(45deg, #e30613, #e30613 10px, #b00000 10px, #b00000 20px);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .card {
+    background: #141210;
+    border: 2px solid #d4a017;
+    border-radius: 2px;
+    padding: 26px 22px;
+    box-shadow: 0 0 0 6px #0a0a0a, 0 10px 30px rgba(0,0,0,0.8);
+    position: relative;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1px dashed rgba(212,160,23,0.25);
+    pointer-events: none;
+  }
+
+  .qnum {
+    font-family: 'Special Elite', monospace;
+    color: #e30613;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .qnum::before { content: "ГЛАВА " attr(data-num) " — "; color: #d4a017; }
+
+  .question {
+    font-size: 1.2rem;
+    margin-bottom: 22px;
+    line-height: 1.45;
+    color: #f0e6d2;
+    font-weight: 600;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  button.option {
+    background: #1a1a1a;
+    color: #f0e6d2;
+    border: 2px solid #e30613;
+    border-radius: 2px;
+    padding: 14px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    position: relative;
+  }
+  button.option::before {
+    content: "▸";
+    color: #e30613;
+    margin-right: 8px;
+    font-weight: bold;
+  }
+  button.option:hover:not(:disabled) {
+    background: #e30613;
+    color: #0a0a0a;
+    border-color: #d4a017;
+  }
+  button.option:hover:not(:disabled)::before { color: #0a0a0a; }
+  button.option:active:not(:disabled) { transform: scale(0.98); }
+  button.option.correct {
+    background: #d4a017;
+    color: #0a0a0a;
+    border-color: #d4a017;
+    font-weight: bold;
+  }
+  button.option.correct::before { content: "✓"; color: #0a0a0a; }
+  button.option.wrong {
+    background: #4a0000;
+    border-color: #e30613;
+    animation: bulletHit 0.4s;
+  }
+  button.option.wrong::before { content: "✕"; color: #e30613; }
+  button.option:disabled { cursor: default; opacity: 0.85; }
+
+  @keyframes bulletHit {
+    0% { transform: translate(0,0); filter: brightness(2) saturate(0); }
+    15% { transform: translate(-8px, 2px); }
+    30% { transform: translate(6px, -3px); }
+    45% { transform: translate(-5px, 0); }
+    60% { transform: translate(4px, 2px); }
+    100% { transform: translate(0,0); filter: brightness(1) saturate(1); }
+  }
+
+  .feedback {
+    min-height: 30px;
+    margin-top: 16px;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+  .feedback.ok { color: #d4a017; }
+  .feedback.bad { color: #e30613; }
+
+  .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+  .score {
+    font-family: 'Special Elite', monospace;
+    color: #999;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  button.next {
+    background: #e30613;
+    color: #0a0a0a;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    font-size: 1.1rem;
+    border-radius: 2px;
+    padding: 10px 22px;
+    cursor: pointer;
+    visibility: hidden;
+    text-transform: uppercase;
+  }
+  button.next:hover { background: #d4a017; }
+  button.next.show { visibility: visible; }
+
+  .result { text-align: center; }
+  .result h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #e30613;
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 6px;
+  }
+  .result .thewend {
+    font-family: 'Special Elite', monospace;
+    color: #d4a017;
+    letter-spacing: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .result p { font-size: 1.05rem; color: #ddd; font-family: 'Oswald', sans-serif; }
+  .result .verdict {
+    color: #d4a017;
+    font-style: italic;
+    margin-top: 10px;
+  }
+  .restart {
+    margin-top: 22px;
+    background: #e30613;
+    color: #0a0a0a;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    border-radius: 2px;
+    padding: 12px 24px;
+    font-size: 1.15rem;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .restart:hover { background: #d4a017; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="titlecard">
+    <div class="presents">Служба безопасности представляет</div>
+    <h1>V.I.P. ОХРАНА</h1>
+    <div class="sub">Совещание, из которого нельзя выйти, не ответив на вопросы</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const questions = [
+  { q: "На каком посту хранятся ключи с грозной надписью «вскрывать при экстренной ситуации»?", options: ["Седьмой пост", "Шестой пост — там уютнее", "Девятый пост, но ключи потеряли ещё в мае"], correct: 0 },
+  { q: "Что разрешено вскрывать этими ключами только после высочайшего распоряжения?", options: ["Пожарный шкаф и аптечку", "Склад с корпоративными кружками", "Холодильник в комнате охраны"], correct: 0 },
+  { q: "Какой позывной носит первый охранник пары — не роза, но тоже красиво?", options: ["Рубин первый", "Рубин третий, для солидности", "Изумруд, потому что бюджет закончился"], correct: 0 },
+  { q: "Кем на самом деле является «Рубин один», если разобраться в этой оперной путанице?", options: ["Водителем", "Няней с позывным «Гром»", "Диспетчером, который просто громко дышит в рацию"], correct: 0 },
+  { q: "Что случилось с лифтом ровно в момент самого важного приезда за десять лет — ну как по заказу?", options: ["Случился сбой системы (просадка напряжения)", "Лифт объявил забастовку", "Лифт решил, что сегодня выходной"], correct: 0 },
+  { q: "Где примерно застрял лифт, подарив всем немного клаустрофобии?", options: ["В районе −3 / −2 этажа", "На 39-м, для эффектности", "Ровно между этажами мечты и реальности"], correct: 0 },
+  { q: "Сколько команд предусмотрено на случай сбоя — по словам спикера, всё чётко, как в театре?", options: ["Три команды", "Пять команд и один спонтанный крик", "Одна команда: «Все побежали»"], correct: 0 },
+  { q: "Кто должен бежать к диспетчеру, а не звонить визгливым голосом прямо в кабину?", options: ["Старший смены", "Первый попавшийся с рацией", "Оператор, который как раз отошёл за чаем"], correct: 0 },
+  { q: "Что в итоге решили сделать с электропитанием лифта, чтобы не повторять клаустрофобное шоу?", options: ["Поставить новое оборудование (бесперебойник)", "Молиться перед каждой поездкой", "Возить гостей исключительно по лестнице"], correct: 0 },
+  { q: "Какая сумма всплыла в разговоре про этот самый бесперебойник?", options: ["50 миллионов", "5 миллионов и скидка постоянного клиента", "500 тысяч и банка кофе в придачу"], correct: 0 },
+  { q: "На каком этаже прописался этот дорогостоящий бесперебойник?", options: ["На шестьдесят шестом этаже", "На сороковом, поближе к облакам", "На минус первом, для интриги"], correct: 0 },
+  { q: "Какую опасную привычку с оружием разбирает спикер, как строгий, но справедливый учитель?", options: ["Досылание патрона без всякой необходимости", "Ношение оружия на плече, как гитары", "Полировку оружия во время смены"], correct: 0 },
+  { q: "Что произошло у сотрудника, который решил устроить неполную разборку оружия на посту?", options: ["Не смог правильно собрать оружие обратно", "Собрал табуретку вместо автомата", "Разобрал всё, кроме собственной уверенности"], correct: 0 },
+  { q: "Кто снимал охраняемых на смартфон, чем заслужил персональное упоминание на планёрке?", options: ["Человек со стороны от сопровождающей группы", "Голубь с камерой", "Штатный папарацци предприятия"], correct: 0 },
+  { q: "На каком расстоянии съёмка считалась ещё не поводом бросаться наперерез, аки супергерой?", options: ["Около 25 метров", "Около 10 метров, впритык к панике", "Около 100 метров — можно снимать хоть с крыши"], correct: 0 },
+  { q: "Что нужно сделать, если человек начал снимать совсем близко от охраняемого?", options: ["Подойти и вежливо отвлечь внимание", "Громко закричать «Не снимать!» на всю площадь", "Спрятаться самому за колонну"], correct: 0 },
+  { q: "Что торжественно убирают с определённого поста при приближении «Рубина»?", options: ["Столик", "Кулер с водой, на всякий случай", "Табуретку дежурного"], correct: 0 },
+  { q: "На каком посту дежурит этот многострадальный столик, который то убирают, то возвращают?", options: ["Шестой пост", "Второй пост, для симметрии", "Девятый пост, он там уже как достопримечательность"], correct: 0 },
+  { q: "Кому, по твёрдому убеждению спикера, должна стекаться вся информация в первую очередь?", options: ["Старшему, который и проводит это самое совещание", "Диспетчеру, а он уже решит, говорить или нет", "Общему чату, пусть все читают одновременно"], correct: 0 },
+  { q: "Какие именно данные в анкетах сотрудников нужно срочно скорректировать?", options: ["Данные воинского учёта", "Любимый цвет и знак зодиака", "Список любимых сериалов на смене"], correct: 0 }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playGlitchSound() {
+  const now = audioCtx.currentTime;
+
+  // low crack transient (bullet/whip hit)
+  const bufferSize = audioCtx.sampleRate * 0.25;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+  }
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = buffer;
+
+  const bandpass = audioCtx.createBiquadFilter();
+  bandpass.type = "bandpass";
+  bandpass.frequency.setValueAtTime(2500, now);
+  bandpass.frequency.exponentialRampToValueAtTime(150, now + 0.2);
+  bandpass.Q.value = 6;
+
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0.6, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+  noise.connect(bandpass).connect(gain).connect(audioCtx.destination);
+  noise.start(now);
+  noise.stop(now + 0.25);
+
+  // low thud
+  const osc = audioCtx.createOscillator();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(90, now);
+  osc.frequency.exponentialRampToValueAtTime(35, now + 0.2);
+  const oscGain = audioCtx.createGain();
+  oscGain.gain.setValueAtTime(0.4, now);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+  osc.connect(oscGain).connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 0.22);
+}
+
+function playCorrectSound() {
+  const now = audioCtx.currentTime;
+  // cash register / vinyl scratch "ka-ching" style sting
+  [880, 1320].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(freq, now + i * 0.05);
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.18, now + i * 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.18);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now + i * 0.05);
+    osc.stop(now + i * 0.05 + 0.18);
+  });
+}
+
+function render() {
+  const card = document.getElementById('quizCard');
+  const fill = document.getElementById('progressFill');
+  fill.style.width = (current / questions.length * 100) + '%';
+
+  if (current >= questions.length) {
+    let verdict;
+    const pct = score / questions.length;
+    if (pct === 1) verdict = "«Мы одна команда» — и, похоже, ты в ней старший смены. Идеально.";
+    else if (pct >= 0.7) verdict = "Неплохо, боец. Но пару раз мозг всё же сработал по шаблону.";
+    else if (pct >= 0.4) verdict = "Как та история с Рубином — вроде идентифицировал, но не то.";
+    else verdict = "Служебную проверку по тебе, пожалуй, лучше не назначать. Пересмотри плёнку ещё раз.";
+    card.innerHTML = `
+      <div class="result">
+        <div class="thewend">Конец фильма</div>
+        <h2>ЗАНАВЕС</h2>
+        <p>Правильных ответов: ${score} из ${questions.length}</p>
+        <p class="verdict">${verdict}</p>
+        <button class="restart" id="restartBtn">Прокрутить плёнку заново</button>
+      </div>`;
+    document.getElementById('restartBtn').onclick = () => {
+      current = 0; score = 0; render();
+    };
+    return;
+  }
+
+  const item = questions[current];
+  const opts = item.options.map((o, i) => `<button class="option" data-idx="${i}">${o}</button>`).join('');
+  const roman = toRoman(current + 1);
+
+  card.innerHTML = `
+    <div class="qnum" data-num="${roman}"></div>
+    <div class="question">${item.q}</div>
+    <div class="options">${opts}</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="footer">
+      <div class="score">Счёт по сюжету: ${score}</div>
+      <button class="next" id="nextBtn">Следующая сцена →</button>
+    </div>
+  `;
+
+  answered = false;
+  const buttons = card.querySelectorAll('.option');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (answered) return;
+      answered = true;
+      const idx = parseInt(btn.dataset.idx);
+      const feedback = document.getElementById('feedback');
+      const nextBtn = document.getElementById('nextBtn');
+
+      const okPhrases = [
+        "Верно! Юра бы тобой гордился.",
+        "В точку. Мозг сегодня не работает по шаблону.",
+        "Правильно! Можно смело вставать на девятый пост.",
+        "Есть! Служебную проверку по тебе точно не назначат.",
+        "Так держать, будущий старший смены."
+      ];
+      const badPhrases = [
+        "Мимо. Мозг сработал по шаблону, как обычно.",
+        "Неверно — вот так и рождаются дебильные слухи.",
+        "Не угадал. Иди, попроси старшего подсказать.",
+        "Промах. Замыливание глаза, бывает у всех.",
+        "Неверно, но хотя бы честно, а не как с Рубином."
+      ];
+
+      if (idx === item.correct) {
+        btn.classList.add('correct');
+        feedback.textContent = okPhrases[Math.floor(Math.random() * okPhrases.length)];
+        feedback.className = "feedback ok";
+        score++;
+        playCorrectSound();
+      } else {
+        btn.classList.add('wrong');
+        buttons[item.correct].classList.add('correct');
+        feedback.textContent = badPhrases[Math.floor(Math.random() * badPhrases.length)];
+        feedback.className = "feedback bad";
+        playGlitchSound();
+      }
+      buttons.forEach(b => b.disabled = true);
+      nextBtn.classList.add('show');
+    });
+  });
+
+  document.getElementById('nextBtn').onclick = () => {
+    current++;
+    render();
+  };
+}
+
+function toRoman(num) {
+  const map = [[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+  let result = '';
+  for (const [val, sym] of map) {
+    while (num >= val) { result += sym; num -= val; }
+  }
+  return result;
+}
+
+render();
+</script>
+</body>
+</html>
